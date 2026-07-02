@@ -74,3 +74,16 @@ Decision:
 
 - Revise the MVP toward context-rich scenario cards and multiple recall modes: explain, choose, apply, trace, and exact command/name.
 - Keep the UI quiet and session-based, but demote card IDs from tag-like visual treatment into plain metadata.
+
+## 2026-06-30: Situation Card Daily Reflection Slice
+
+Artifact type: product implementation note
+
+Purpose: shift the first usable app slice away from project-specific memorization and toward durable engineering-growth cards.
+
+Decision:
+
+- Continue calling the learning units "cards."
+- Center the daily flow on one 5-minute card with situation context, Jira ticket, broader project goal, constraints, tradeoffs, and reflection prompts.
+- Remove scoring from the first slice. Use a revealable senior lens, gentle correction, and performance-review framing instead.
+- Keep weekly synthesis and card-authoring assistance as future work.
