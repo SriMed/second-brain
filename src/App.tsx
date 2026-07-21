@@ -13,9 +13,12 @@ type Card = {
   id: string;
   title: string;
   concept: string;
-  jiraTicket: string;
+  jiraTicket: string | null;
+  createdAt?: string;
+  archived?: boolean;
   projectGoal: string;
   situation: string;
+  situationCollapsible?: string;
   featureGoalOrBugFix: string;
   constraints: string[];
   tradeoffs: Tradeoff[];
@@ -98,19 +101,21 @@ function saveStoredProgress(progress: StoredProgress) {
 }
 
 function orderCardsForSession(cards: Card[], progress: StoredProgress) {
-  return [...cards].sort((firstCard, secondCard) => {
-    const firstReviews = progress.reviewsByCardId[firstCard.id] ?? 0;
-    const secondReviews = progress.reviewsByCardId[secondCard.id] ?? 0;
+  return [...cards]
+    .filter((card) => !card.archived)
+    .sort((firstCard, secondCard) => {
+      const firstReviews = progress.reviewsByCardId[firstCard.id] ?? 0;
+      const secondReviews = progress.reviewsByCardId[secondCard.id] ?? 0;
 
-    if (firstReviews !== secondReviews) {
-      return firstReviews - secondReviews;
-    }
+      if (firstReviews !== secondReviews) {
+        return firstReviews - secondReviews;
+      }
 
-    const firstReviewedAt = progress.lastReviewedAtByCardId[firstCard.id] ?? "";
-    const secondReviewedAt = progress.lastReviewedAtByCardId[secondCard.id] ?? "";
+      const firstReviewedAt = progress.lastReviewedAtByCardId[firstCard.id] ?? "";
+      const secondReviewedAt = progress.lastReviewedAtByCardId[secondCard.id] ?? "";
 
-    return firstReviewedAt.localeCompare(secondReviewedAt);
-  });
+      return firstReviewedAt.localeCompare(secondReviewedAt);
+    });
 }
 
 function getTodayLabel() {
@@ -121,6 +126,47 @@ function getTodayLabel() {
   }).format(new Date());
 }
 
+function Collapsible({ text }: { text: string }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="collapsible">
+      <button
+        className="collapsible-toggle"
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <span className="collapsible-icon">{open ? "▾" : "▸"}</span>
+        More context
+      </button>
+      {open && <p className="collapsible-body">{text}</p>}
+    </div>
+  );
+}
+
+function StepShell({
+  emoji,
+  companion,
+  children,
+  animationDelay,
+}: {
+  emoji: string;
+  companion: string;
+  children: ReactNode;
+  animationDelay: number;
+}) {
+  return (
+    <div className="story-step" style={{ animationDelay: `${animationDelay}ms` }}>
+      <div className="step-companion">
+        <span className="step-companion-face" aria-hidden="true">{emoji}</span>
+        <span className="step-companion-label">{companion}</span>
+      </div>
+      {children}
+    </div>
+  );
+}
+
 function App() {
   const [initialProgress] = useState<StoredProgress>(() => loadStoredProgress());
   const [progress, setProgress] = useState<StoredProgress>(initialProgress);
@@ -129,7 +175,10 @@ function App() {
   );
   const cardById = useMemo(() => new Map(typedDeck.cards.map((card) => [card.id, card])), []);
   const sessionCards = useMemo(
-    () => sessionCardIds.map((cardId) => cardById.get(cardId)).filter((card): card is Card => Boolean(card)),
+    () =>
+      sessionCardIds
+        .map((cardId) => cardById.get(cardId))
+        .filter((card): card is Card => Boolean(card)),
     [cardById, sessionCardIds],
   );
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -152,6 +201,7 @@ function App() {
   const currentCard = sessionCards[currentCardIndex % sessionCards.length];
   const reviewCount = progress.reviewsByCardId[currentCard.id] ?? 0;
   const lastReviewedAt = progress.lastReviewedAtByCardId[currentCard.id];
+
   const storySteps: StoryStep[] = [
     {
       id: "situation",
@@ -164,6 +214,9 @@ function App() {
             Situation
           </p>
           <p>{currentCard.situation}</p>
+          {currentCard.situationCollapsible && (
+            <Collapsible text={currentCard.situationCollapsible} />
+          )}
         </section>
       ),
     },
@@ -255,6 +308,7 @@ function App() {
       ),
     },
   ];
+
   const visibleStorySteps = storySteps.slice(0, storyStepIndex + 1);
   const currentStoryStep = storySteps[storyStepIndex];
   const isStoryComplete = storyStepIndex === storySteps.length - 1;
@@ -270,20 +324,22 @@ function App() {
     setAnimationKey((key) => key + 1);
   }
 
-  function markReviewed() {
-    const updatedProgress: StoredProgress = {
-      reviewsByCardId: {
-        ...progress.reviewsByCardId,
-        [currentCard.id]: reviewCount + 1,
-      },
-      lastReviewedAtByCardId: {
-        ...progress.lastReviewedAtByCardId,
-        [currentCard.id]: new Date().toISOString(),
-      },
-    };
+  function advanceCard(markAsReviewed: boolean) {
+    if (markAsReviewed) {
+      const updatedProgress: StoredProgress = {
+        reviewsByCardId: {
+          ...progress.reviewsByCardId,
+          [currentCard.id]: reviewCount + 1,
+        },
+        lastReviewedAtByCardId: {
+          ...progress.lastReviewedAtByCardId,
+          [currentCard.id]: new Date().toISOString(),
+        },
+      };
+      setProgress(updatedProgress);
+      saveStoredProgress(updatedProgress);
+    }
 
-    setProgress(updatedProgress);
-    saveStoredProgress(updatedProgress);
     setCurrentCardIndex((index) => (index + 1) % sessionCards.length);
     setStoryStepIndex(0);
     setReflection("");
@@ -301,28 +357,17 @@ function App() {
           </div>
           <div className="daily-marker" aria-label="Today">
             <span>{getTodayLabel()}</span>
-            <small>5 min</small>
           </div>
         </header>
 
         <div className="session-meta" aria-label="Current card metadata">
           <span>{currentCard.id}</span>
-          <span>{currentCard.jiraTicket}</span>
+          {currentCard.jiraTicket && <span>{currentCard.jiraTicket}</span>}
           <span>{currentCard.concept}</span>
           <span>{reviewCount} reviews</span>
         </div>
 
         <article className="reflection-card">
-          <div className="companion-badge" aria-live="polite">
-            <span className="companion-face" aria-hidden="true">
-              {phase === "revealed" ? "🌟" : currentStoryStep.emoji}
-            </span>
-            <span>{phase === "revealed" ? "Turn it into your story." : currentStoryStep.companion}</span>
-            <span className="sparkle-burst" key={animationKey} aria-hidden="true">
-              ✨
-            </span>
-          </div>
-
           <div className="tag-row" aria-label="Card tags">
             {currentCard.tags.map((tag) => (
               <span className="tag" key={tag}>
@@ -345,22 +390,44 @@ function App() {
 
           <div className="story-stack">
             {visibleStorySteps.map((step, index) => (
-              <div className="story-step" key={step.id} style={{ animationDelay: `${index * 50}ms` }}>
+              <StepShell
+                key={step.id}
+                emoji={step.emoji}
+                companion={step.companion}
+                animationDelay={index * 50}
+              >
                 {step.content}
-              </div>
+              </StepShell>
             ))}
           </div>
 
           {!isStoryComplete ? (
             <div className="story-control">
-              <button className="primary-action story-action" type="button" onClick={revealNextStoryStep}>
+              <button
+                className="primary-action story-action"
+                type="button"
+                onClick={revealNextStoryStep}
+              >
                 Continue story
+              </button>
+              <button
+                className="skip-action"
+                type="button"
+                onClick={() => advanceCard(false)}
+                aria-label="Skip to next card without marking reviewed"
+              >
+                Skip
               </button>
             </div>
           ) : null}
 
           {phase === "revealed" ? (
             <section className="lens-panel" aria-live="polite">
+              <div className="step-companion">
+                <span className="step-companion-face" aria-hidden="true">🌟</span>
+                <span className="step-companion-label">Turn it into your story.</span>
+                <span className="sparkle-burst" key={animationKey} aria-hidden="true">✨</span>
+              </div>
               <div>
                 <p className="section-label">Senior lens</p>
                 <p>{currentCard.seniorLens}</p>
@@ -373,9 +440,19 @@ function App() {
                 <p className="section-label">Review framing</p>
                 <p>{currentCard.performanceReviewFrame}</p>
               </div>
-              <button className="success-action" type="button" onClick={markReviewed}>
-                Mark reviewed
-              </button>
+              <div className="lens-actions">
+                <button className="success-action" type="button" onClick={() => advanceCard(true)}>
+                  Mark reviewed
+                </button>
+                <button
+                  className="skip-action"
+                  type="button"
+                  onClick={() => advanceCard(false)}
+                  aria-label="Skip to next card without marking reviewed"
+                >
+                  Skip
+                </button>
+              </div>
             </section>
           ) : null}
         </article>
@@ -384,7 +461,11 @@ function App() {
           <span>
             Card {currentCardIndex + 1} / {sessionCards.length}
           </span>
-          <span>{lastReviewedAt ? `Last reviewed ${new Date(lastReviewedAt).toLocaleDateString()}` : "Not reviewed yet"}</span>
+          <span>
+            {lastReviewedAt
+              ? `Last reviewed ${new Date(lastReviewedAt).toLocaleDateString()}`
+              : "Not reviewed yet"}
+          </span>
         </footer>
       </section>
     </main>
