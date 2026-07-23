@@ -75,6 +75,33 @@ Decision:
 - Revise the MVP toward context-rich scenario cards and multiple recall modes: explain, choose, apply, trace, and exact command/name.
 - Keep the UI quiet and session-based, but demote card IDs from tag-like visual treatment into plain metadata.
 
+## 2026-07-20: Cards Schema Migration and New Situation Cards
+
+Artifact type: schema migration and card authoring
+
+Purpose: migrate the card format from the original cloze/trace v1 schema to the `second-brain.cards.v2` situation card format, and add new cards from real work sessions.
+
+Decision:
+
+- Adopted `second-brain.cards.v2` as the canonical card schema. Cards now capture situation context, Jira ticket, project goal, constraints, tradeoffs, reflection prompts, senior lens, gentle correction, and performance-review framing.
+- The original five cloze/trace cards (AF-001 through SB-001) are preserved in `llm-knowledge-base.md` as legacy reference but are no longer the active format.
+- `cards.json` now contains 11 cards across domains: React state design, Terraform plan safety, Python parsing boundaries, AgentFlow architecture (AF-100 and AF-117), test runner toolchain literacy, full-stack framework selection, BFF pattern, gRPC vs REST, and npm vs pnpm.
+- Two cards (SB-TF-001, SB-PY-001) are archived; the remaining nine are active.
+
+New cards added:
+
+- SB-REACT-001: Derived state ownership bug in a React form
+- SB-TF-001: Unexpected Terraform replacement plan investigation (archived)
+- SB-PY-001: Python parser brittleness fix (archived)
+- SB-AGENTFLOW-001: AF-100 data-source workflow reuse with admin guardrails
+- SB-AGENTFLOW-002: AF-100 HTTP server setup moved to admin connection form
+- SB-TESTING-001: Vitest vs Jest toolchain literacy with benchmark numbers
+- SB-ARCH-001: Next.js vs NestJS framework separation
+- SB-ARCH-002: BFF pattern as aggregation layer
+- SB-API-001: gRPC vs REST protocol selection
+- SB-TOOLING-001: npm vs pnpm package manager tradeoffs
+- SB-AGENTFLOW-003: AF-117 wiring AgentFlow into the platform LiteLLM proxy
+
 ## 2026-06-30: Situation Card Daily Reflection Slice
 
 Artifact type: product implementation note
