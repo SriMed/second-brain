@@ -9,6 +9,11 @@ type Tradeoff = {
   cons: string[];
 };
 
+type RelatedCard = {
+  id: string;
+  reason: string;
+};
+
 type Card = {
   id: string;
   title: string;
@@ -27,6 +32,7 @@ type Card = {
   seniorLens: string;
   performanceReviewFrame: string;
   tags: string[];
+  relatedCards?: RelatedCard[];
 };
 
 type CardDeck = {
@@ -440,6 +446,39 @@ function App() {
                 <p className="section-label">Review framing</p>
                 <p>{currentCard.performanceReviewFrame}</p>
               </div>
+              {currentCard.relatedCards && currentCard.relatedCards.length > 0 && (
+                <div className="related-cards-section">
+                  <p className="section-label">Related cards</p>
+                  <div className="related-cards-list">
+                    {currentCard.relatedCards.map((related) => {
+                      const relatedCard = cardById.get(related.id);
+                      return (
+                        <button
+                          className="related-card-chip"
+                          key={related.id}
+                          type="button"
+                          onClick={() => {
+                            const targetIndex = sessionCards.findIndex((c) => c.id === related.id);
+                            if (targetIndex !== -1) {
+                              setCurrentCardIndex(targetIndex);
+                              setStoryStepIndex(0);
+                              setReflection("");
+                              setPhase("reflecting");
+                              setAnimationKey((k) => k + 1);
+                            }
+                          }}
+                        >
+                          <span className="related-card-id">{related.id}</span>
+                          {relatedCard && (
+                            <span className="related-card-title">{relatedCard.title}</span>
+                          )}
+                          <span className="related-card-reason">{related.reason}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
               <div className="lens-actions">
                 <button className="success-action" type="button" onClick={() => advanceCard(true)}>
                   Mark reviewed
