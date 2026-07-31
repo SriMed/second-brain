@@ -1,0 +1,4 @@
+interface:
+  display_name: "Propose Second Brain Cards"
+  short_description: "Spot interesting card ideas in a session"
+  default_prompt: "Use $propose-second-brain-cards to scan this session for possible Second Brain cards."

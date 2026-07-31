@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate Second Brain Card"
+  short_description: "Turn work moments into growth cards"
+  default_prompt: "Use $generate-second-brain-card to turn today's interesting engineering moment into a Second Brain card."
