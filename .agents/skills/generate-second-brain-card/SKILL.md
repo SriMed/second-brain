@@ -1,13 +1,13 @@
 ---
 name: generate-second-brain-card
-description: Create or update Second Brain situation cards for developer growth. Use when the user wants to turn an interesting work moment, Jira ticket, bug fix, feature decision, code review lesson, debugging session, architecture tradeoff, or daily/weekly reflection into a structured `second-brain.cards.v2` card with situation context, project goal, tradeoffs, reflection prompts, senior lens, gentle correction, performance-review framing, and tags.
+description: Create or update focused Second Brain situation cards for developer growth. Use when the user wants to turn one or more interesting work moments, Jira tickets, bug fixes, feature decisions, code review lessons, debugging sessions, architecture tradeoffs, or daily/weekly reflections into structured `second-brain.cards.v2` cards with situation context, project goal, tradeoffs, reflection prompts, senior lens, gentle correction, performance-review framing, and tags.
 ---
 
 # Generate Second Brain Card
 
 ## Outcome
 
-Help the user turn a real engineering moment into one durable Second Brain card. The card should be concrete enough to support performance review, interview, mentoring, or weekly review stories, and abstract enough to teach reusable developer judgment rather than memorizing project trivia.
+Help the user turn real engineering moments into focused, durable Second Brain cards. Each card should capture the smallest independently useful lesson: concrete enough to support performance review, interview, mentoring, or weekly review stories, and abstract enough to teach reusable developer judgment rather than memorizing project trivia.
 
 ## Card Destination
 
@@ -34,14 +34,24 @@ If `SECOND_BRAIN_CARDS_PATH` is not set, ask the user for the path to their `car
    - What would you want future-you to recognize faster?
    - How did this connect to the broader project goal?
 
-3. Extract the durable concept. Prefer specific growth concepts over generic labels:
+3. Identify the distinct durable concepts in the user's content. Prefer specific growth concepts over generic labels:
 
    - Good: "React state ownership", "Terraform replacement-risk review", "Python parsing boundaries", "API contract versioning", "test isolation", "adapter boundary design"
    - Too broad: "React", "best practices", "debugging", "communication"
 
-4. Draft the card in prose first. Make sure the story can be explained to a junior developer, a performance-review audience, or an interviewer.
+4. Decide how to organize the content before drafting:
 
-5. Produce valid JSON for one `second-brain.cards.v2` card using this shape:
+   - Create the smallest independently useful card.
+   - Split the content when each resulting card teaches a distinct reusable judgment and can stand on its own without duplicating most of another card's context.
+   - Keep context, decision, tradeoffs, and outcome together when separating them would weaken the lesson.
+   - Do not assume one ticket, meeting, reflection, or large input should become one card.
+   - Do not create extra cards merely because the input is long.
+
+   If more than one card is warranted, propose the card set with a one-sentence focus for each card and explain the boundaries between them. Let the user adjust the organization before drafting.
+
+5. Draft each card in prose first. Make sure each story can be explained independently to a junior developer, a performance-review audience, or an interviewer.
+
+6. Produce valid JSON for each proposed `second-brain.cards.v2` card using this shape:
 
 ```json
 {
@@ -89,13 +99,17 @@ Notes on new fields:
 - `archived`: default `false`. Set `true` to hide a card from the app without deleting it.
 - `situationCollapsible`: optional string. Use it when the situation needs extra grounding context (raw specifics, how the card was created, a URL) but that detail would make the main `situation` field too long or too project-specific.
 
-6. Ask for approval before editing `cards.json`. If the user approves, append the card to `DEFAULT_CARDS_JSON_PATH` unless the user provided a different destination. Preserve the existing `schemaVersion` and valid JSON formatting.
+7. Ask for approval before editing `cards.json`. If the user approves, append all approved cards to `DEFAULT_CARDS_JSON_PATH` unless the user provided a different destination. Preserve the existing `schemaVersion` and valid JSON formatting.
 
-7. After editing, validate with a JSON parse command and summarize what changed.
+8. After editing, validate with a JSON parse command and summarize what changed.
 
 ## Card Quality Rules
 
 - Make the card about judgment, not trivia.
+- Keep each card centered on one reusable judgment. If the title or concept needs "and" to join independent lessons, consider splitting it.
+- Prefer multiple focused cards over one catch-all card when the source contains independently useful decisions, lessons, or situations.
+- Avoid over-splitting: shared context alone does not require a separate card, and closely coupled parts of one decision should stay together.
+- Avoid duplicate cards. Each card in a set must offer a meaningfully different retrieval target and reflection opportunity.
 - Keep Jira details as anchors, not the thing being memorized.
 - Tie the card to the broader project goal whenever possible.
 - Include two real options in `tradeoffs`; do not invent fake choices just to fill the field.
