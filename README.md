@@ -107,6 +107,44 @@ connection. After revealing the senior lens, the app displays these links and
 lets you jump to a related active card. A link to an archived or missing card
 can still be displayed, but it cannot be opened during the current session.
 
+## Add your vocab
+
+Separate from the situation-card deck, `vocab.json` (also gitignored, same
+personal-content treatment as `cards.json`) holds a lightweight glossary —
+technical terms, company/technology names, or ordinary vocabulary you want a
+definition of on hand. Unlike cards, vocab entries are **not** part of the
+spaced-repetition review flow; they're a reference layer you look things up
+in, not something cycled through daily.
+
+```json
+{
+  "schemaVersion": "1",
+  "entries": [
+    {
+      "id": "v1",
+      "term": "Rollback",
+      "blurb": "Reverting a system to a prior known-good state after a failed change.",
+      "context": "Came up reviewing the migration card — rollback safety was the deciding constraint.",
+      "tags": ["technology"]
+    }
+  ]
+}
+```
+
+`id`, `term`, and `blurb` are required. `context` is optional. `tags` are
+open-form — there's no fixed set of categories (company/technology/word or
+anything else you want) — used only to filter the vocab page.
+
+The app is missing `vocab.json` by default; it degrades to an empty glossary
+rather than failing to build, so adding vocab is optional.
+
+Any word in a situation card that matches a vocab `term` (whole-word,
+case-insensitive) renders as an underlined link. Hovering it shows a peek of
+the `blurb`; clicking it opens the vocab page, scrolled to that entry. The
+vocab page itself lives behind the "📖 Vocab" link in the header — the app
+still opens straight into the daily review card, vocab is one click away,
+never the default view.
+
 ## Create cards with Codex
 
 The repository includes two project skills under `.agents/skills/`:

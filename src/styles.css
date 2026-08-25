@@ -56,6 +56,27 @@ ul {
   display: flex;
 }
 
+.header-actions {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+}
+
+.vocab-nav-link {
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(23, 33, 27, 0.16);
+  border-radius: 999px;
+  color: #34423a;
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 8px 14px;
+}
+
+.vocab-nav-link:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(23, 33, 27, 0.3);
+}
+
 .session-header,
 .session-footer {
   justify-content: space-between;
@@ -476,6 +497,115 @@ h3 {
   font-size: 0.92rem;
   gap: 12px;
   margin-top: 14px;
+}
+
+.vocab-term-wrap {
+  display: inline;
+  position: relative;
+}
+
+.vocab-term {
+  background: none;
+  border: 0;
+  border-bottom: 1px dashed rgba(42, 99, 82, 0.6);
+  color: inherit;
+  cursor: pointer;
+  display: inline;
+  font: inherit;
+  padding: 0;
+  text-decoration: underline;
+  text-decoration-color: rgba(42, 99, 82, 0.45);
+  text-underline-offset: 2px;
+}
+
+.vocab-term:hover,
+.vocab-term:focus-visible {
+  color: #2a6352;
+}
+
+.vocab-peek {
+  background: #17211b;
+  border-radius: 8px;
+  bottom: calc(100% + 8px);
+  box-shadow: 0 12px 30px rgba(23, 33, 27, 0.28);
+  color: #f6f7f3;
+  display: grid;
+  font-size: 0.84rem;
+  gap: 3px;
+  left: 50%;
+  line-height: 1.4;
+  padding: 10px 12px;
+  position: absolute;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 260px;
+  z-index: 20;
+}
+
+.vocab-peek strong {
+  color: #fffdfa;
+  font-size: 0.86rem;
+}
+
+.vocab-tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.vocab-tag {
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(23, 33, 27, 0.16);
+  border-radius: 999px;
+  color: #405048;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 6px 12px;
+}
+
+.vocab-tag-active {
+  background: #2a6352;
+  border-color: #2a6352;
+  color: #fffdfa;
+}
+
+.vocab-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.vocab-entry {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(23, 33, 27, 0.14);
+  border-radius: 8px;
+  padding: 18px 20px;
+}
+
+.vocab-entry-focused {
+  border-color: rgba(42, 99, 82, 0.55);
+  box-shadow: 0 0 0 3px rgba(42, 99, 82, 0.14);
+}
+
+.vocab-entry h3 {
+  margin-bottom: 6px;
+}
+
+.vocab-entry p {
+  color: #34423a;
+  line-height: 1.5;
+}
+
+.vocab-entry-context {
+  color: #55615a;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 6px;
+}
+
+.vocab-entry .tag-row {
+  margin-top: 10px;
 }
 
 @keyframes story-reveal {

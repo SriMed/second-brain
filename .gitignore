@@ -6,6 +6,7 @@ npm-debug.log*
 
 # Personal learning data stays local unless explicitly shared.
 cards.json
+vocab.json
 llm-knowledge-base.md
 product-and-research-notes.md
 
