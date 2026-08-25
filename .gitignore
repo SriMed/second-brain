@@ -4,10 +4,5 @@ dist/
 npm-debug.log*
 *.local
 
-# Personal learning data stays local unless explicitly shared.
-cards.json
-llm-knowledge-base.md
-product-and-research-notes.md
-
 # Generated visual artifacts can contain card content.
 artifacts/*.png
