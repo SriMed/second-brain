@@ -1,5 +1,6 @@
 import { FormEvent, useMemo, useState, type ReactNode } from "react";
 import deck from "../cards.json";
+import MermaidDiagram, { type CardDiagram } from "./MermaidDiagram";
 
 type ReviewPhase = "reflecting" | "revealed";
 
@@ -24,6 +25,7 @@ type Card = {
   projectGoal: string;
   situation: string;
   situationCollapsible?: string;
+  diagram?: CardDiagram;
   featureGoalOrBugFix: string;
   constraints: string[];
   tradeoffs: Tradeoff[];
@@ -434,6 +436,9 @@ function App() {
           <p>{withVocabLinks(currentCard.situation)}</p>
           {currentCard.situationCollapsible && (
             <Collapsible content={withVocabLinks(currentCard.situationCollapsible)} />
+          )}
+          {currentCard.diagram && (
+            <MermaidDiagram key={currentCard.id} diagram={currentCard.diagram} />
           )}
         </section>
       ),

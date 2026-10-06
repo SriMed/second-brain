@@ -103,6 +103,19 @@ Notes on new fields:
 
 8. After editing, validate with a JSON parse command and summarize what changed.
 
+## Optional Diagrams
+
+Include a Mermaid diagram when it materially clarifies relationships, boundaries, or flow. Omit it when prose is clearer. Keep it focused on the card’s reusable lesson.
+
+Use the optional `diagram` object with `caption` and `source`, both strings. Write a short explanatory caption and raw Mermaid syntax in `source`, without Markdown fences. Escape newlines as `\n` in JSON. The app displays this diagram in a collapsible panel on the Situation step.
+
+```json
+"diagram": {
+  "caption": "Application code is packaged before it runs.",
+  "source": "flowchart LR\n  Code[Application code] --> Image[Container image] --> Pod[Running pod]"
+}
+```
+
 ## Card Quality Rules
 
 - Make the card about judgment, not trivia.
