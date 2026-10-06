@@ -240,7 +240,9 @@ function StepShell({
   return (
     <div className="story-step" style={{ animationDelay: `${animationDelay}ms` }}>
       <div className="step-companion">
-        <span className="step-companion-face" aria-hidden="true">{emoji}</span>
+        <span className="step-companion-face" aria-hidden="true">
+          {emoji}
+        </span>
         <span className="step-companion-label">{companion}</span>
       </div>
       {children}
@@ -307,9 +309,8 @@ function VocabPage({
             <p className="section-label">No vocab words yet</p>
             <p>
               Add entries to <code>vocab.json</code> in the project root — same gitignored,
-              local-only treatment as <code>cards.json</code>. Each entry needs an{" "}
-              <code>id</code>, <code>term</code>, <code>blurb</code>, and open-form{" "}
-              <code>tags</code>.
+              local-only treatment as <code>cards.json</code>. Each entry needs an <code>id</code>,{" "}
+              <code>term</code>, <code>blurb</code>, and open-form <code>tags</code>.
             </p>
           </article>
         ) : (
@@ -393,7 +394,11 @@ function App() {
     return parts.map((part, index) => {
       const entry = vocabByTerm.get(part.toLowerCase());
       // Plain strings don't need React keys; only the VocabTerm elements do.
-      return entry ? <VocabTerm key={`${entry.id}-${index}`} entry={entry} onOpen={openVocabEntry} /> : part;
+      return entry ? (
+        <VocabTerm key={`${entry.id}-${index}`} entry={entry} onOpen={openVocabEntry} />
+      ) : (
+        part
+      );
     });
   }
 
@@ -533,7 +538,6 @@ function App() {
   ];
 
   const visibleStorySteps = storySteps.slice(0, storyStepIndex + 1);
-  const currentStoryStep = storySteps[storyStepIndex];
   const isStoryComplete = storyStepIndex === storySteps.length - 1;
 
   function revealSeniorLens(event: FormEvent<HTMLFormElement>) {
@@ -659,9 +663,13 @@ function App() {
           {phase === "revealed" ? (
             <section className="lens-panel" aria-live="polite">
               <div className="step-companion">
-                <span className="step-companion-face" aria-hidden="true">🌟</span>
+                <span className="step-companion-face" aria-hidden="true">
+                  🌟
+                </span>
                 <span className="step-companion-label">Turn it into your story.</span>
-                <span className="sparkle-burst" key={animationKey} aria-hidden="true">✨</span>
+                <span className="sparkle-burst" key={animationKey} aria-hidden="true">
+                  ✨
+                </span>
               </div>
               <div>
                 <p className="section-label">Senior lens</p>

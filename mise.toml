@@ -9,3 +9,21 @@ run = "npm run dev"
 
 [tasks.build]
 run = "npm run build"
+
+[tasks.lint]
+run = "npm run lint"
+
+[tasks."lint:fix"]
+run = "npm run lint:fix"
+
+[tasks.format]
+run = "npm run format"
+
+[tasks."format:check"]
+run = "npm run format:check"
+
+[tasks.typecheck]
+run = "npm run typecheck"
+
+[tasks.check]
+run = "npm run check"
