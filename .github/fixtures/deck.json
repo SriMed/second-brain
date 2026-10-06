@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "second-brain.cards.v2",
+  "cards": [
+    {
+      "id": "SB-CI-001",
+      "title": "Synthetic build fixture",
+      "concept": "Continuous integration",
+      "jiraTicket": null,
+      "projectGoal": "Verify the app builds without personal content.",
+      "situation": "CI uses a synthetic deck.",
+      "featureGoalOrBugFix": "Build from a clean checkout.",
+      "constraints": ["No personal cards in CI."],
+      "tradeoffs": [
+        {
+          "option": "Synthetic fixture",
+          "pros": ["Reproducible"],
+          "cons": ["Does not validate personal content"]
+        }
+      ],
+      "reflectionPrompts": ["What does a successful build prove?"],
+      "gentleCorrection": "A build does not prove UI interactions.",
+      "seniorLens": "Keep verification reproducible.",
+      "performanceReviewFrame": "Added repeatable checks.",
+      "tags": ["ci"],
+      "diagram": {
+        "caption": "The CI checks run before the build completes.",
+        "source": "flowchart LR\n  Format --> Lint --> Types --> Build"
+      }
+    }
+  ]
+}

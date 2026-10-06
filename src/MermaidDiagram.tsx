@@ -6,7 +6,7 @@ export type CardDiagram = {
 };
 
 let renderNumber = 0;
-let renderer: Promise<typeof import("mermaid")["default"]> | undefined;
+let renderer: Promise<(typeof import("mermaid"))["default"]> | undefined;
 
 function loadRenderer() {
   renderer ??= import("mermaid").then(({ default: mermaid }) => {
@@ -29,8 +29,6 @@ function DiagramCanvas({ caption, source }: CardDiagram) {
   useEffect(() => {
     let cancelled = false;
     const id = `card-diagram-${renderNumber++}`;
-    setSvg("");
-    setFailed(false);
 
     async function draw() {
       try {
@@ -83,7 +81,7 @@ export default function MermaidDiagram({ diagram }: { diagram: CardDiagram }) {
       onToggle={(event) => setOpen(event.currentTarget.open)}
     >
       <summary>See diagram</summary>
-      {open && <DiagramCanvas {...diagram} />}
+      {open && <DiagramCanvas key={diagram.source} {...diagram} />}
     </details>
   );
 }

@@ -42,6 +42,28 @@ npm run build
 npm run preview
 ```
 
+## Code checks
+
+Run the same checks as CI locally (after creating your local `cards.json`):
+
+```bash
+npm run check
+```
+
+You can also run `mise run check`; mise pins Node and exposes the same individual
+check and fix tasks.
+
+Individual commands are `npm run format:check`, `npm run lint`,
+`npm run typecheck`, and `npm run build`. Apply formatting with `npm run format`
+and safe lint fixes with `npm run lint:fix`. Formatting excludes personal data
+and generated artifacts.
+
+GitHub Actions runs these checks for pull requests and pushes to `main`, using
+Node from `mise.toml` and `npm ci`. The clean CI checkout gets a synthetic deck
+from `.github/fixtures/deck.json`; it does not need your personal cards or vocab.
+The build output is not uploaded or deployed. These checks do not replace UI
+behavior verification.
+
 ## Add your cards
 
 The app reads its deck from `cards.json` in the project root. That file is
@@ -79,10 +101,7 @@ locally before running the app:
           "cons": ["Temporary compatibility code"]
         }
       ],
-      "reflectionPrompts": [
-        "What risk matters most here?",
-        "What would you validate first?"
-      ],
+      "reflectionPrompts": ["What risk matters most here?", "What would you validate first?"],
       "gentleCorrection": "Prefer a reversible path when uncertainty is high.",
       "seniorLens": "Separate the schema change from the behavior change and migrate in observable stages.",
       "performanceReviewFrame": "Reduced delivery risk by designing a reversible migration.",
