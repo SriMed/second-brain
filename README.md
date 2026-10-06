@@ -107,6 +107,23 @@ connection. After revealing the senior lens, the app displays these links and
 lets you jump to a related active card. A link to an archived or missing card
 can still be displayed, but it cannot be opened during the current session.
 
+### Optional Mermaid diagrams
+
+A card can include a `diagram` object. The Situation step displays it in a
+collapsed “See diagram” panel; cards without it keep their existing presentation.
+Store Mermaid source directly, without Markdown code fences:
+
+```json
+"diagram": {
+  "caption": "Application code is packaged into an image before Kubernetes runs it.",
+  "source": "flowchart LR\n  Code[Application code] --> Image[Container image] --> Registry[Image registry] --> Pod[Running pod]"
+}
+```
+
+Mermaid loads only when the panel opens. Diagrams use strict-mode rendering with
+click handlers disabled. Invalid syntax shows an error and the source remains
+available under “Show diagram source”; it does not interrupt card review.
+
 ## Add your vocab
 
 Separate from the situation-card deck, `vocab.json` (also gitignored, same
